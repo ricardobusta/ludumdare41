@@ -8,6 +8,8 @@ function love.load()
     local flags = {}
     flags.resizable = true
     love.window.setMode(lovesize.getWidth(), lovesize.getHeight(), flags)
+
+    love.window.setTitle("Ludum Dare 41 - Ricardo & Vanessa")
 end
 
 function love.update(dt)
@@ -23,4 +25,9 @@ end
 
 function love.resize(x, y)
     lovesize.resize(x, y)
+end
+
+function love.mousepressed(x, y, button, istouch)
+    local mx, my = lovesize.pos(x, y)
+    game.mousepressed(mx, my, button)
 end
