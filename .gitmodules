@@ -1,0 +1,6 @@
+[submodule "lovesize"]
+	path = game/lovesize
+	url = git@github.com:RicardoBusta/lovesize.git
+[submodule "game/tiled"]
+	path = game/tiled
+	url = git@github.com:karai17/Simple-Tiled-Implementation.git
