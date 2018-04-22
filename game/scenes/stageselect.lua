@@ -43,6 +43,8 @@ function stageselect.mousepressed(x, y, button)
         for _, b in ipairs(buttons) do
             if checkinside(x, y, b) then
                 currentscene = 3
+                musics.title:stop()
+                musics.game:play()
             end
         end
     end
