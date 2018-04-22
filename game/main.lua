@@ -19,6 +19,7 @@ function love.load()
     sprites.clockbg = love.graphics.newImage("sprites/clockbg.png")
     sprites.playbutton = love.graphics.newImage("sprites/playbutton.png")
     sprites.clockhand = love.graphics.newImage("sprites/clockhand.png")
+    sprites.pinkbutton = love.graphics.newImage("sprites/pinkbutton.png")
 
     fonts = {}
     fonts.small =

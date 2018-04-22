@@ -61,7 +61,7 @@ function game.draw()
     drawclock(clock)
     drawbutton(playbutton)
 
-    love.graphics.setFont(font)
+    love.graphics.setFont(fonts.small)
     love.graphics.print("Thruster: " .. thrusterl * 100 .. "% " .. thrusterr * 100 .. "%", 0, 0)
     love.graphics.print("Time: " .. timer, 0, 20)
 end

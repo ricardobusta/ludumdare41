@@ -7,7 +7,7 @@ function stageselect.update(dt)
 end
 
 function stageselect.draw()
-    love.graphics.setFont(font)
+    love.graphics.setFont(fonts.small)
     love.graphics.print("stage select")
 end
 

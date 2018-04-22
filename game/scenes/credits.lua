@@ -7,7 +7,7 @@ function credits.update(dt)
 end
 
 function credits.draw()
-    love.graphics.setFont(font)
+    love.graphics.setFont(fonts.small)
     love.graphics.print("title screen")
 end
 
