@@ -53,13 +53,13 @@ function game.init()
     map = tiled("maps/map.lua")
     tiles = map.layers["Tiles1"]
 
-    clock = newclock(375, 525, 65)
+    clock = newclock(375, 535, 65)
 
     playbutton = newbutton(510, 460, sprites.playbutton)
 
-    sliderl = newslider(60)
-    sliderr = newslider(210)
-    sliderboth = newslider(130)
+    sliderl = newslider(60, -1)
+    sliderboth = newslider(100, 0)
+    sliderr = newslider(140, 1)
 end
 
 function game.draw()
@@ -69,7 +69,6 @@ function game.draw()
     lg.draw(sprites.hudbg, 0, 448)
     drawslider(sliderl)
     drawslider(sliderr)
-    drawslider(sliderboth)
     drawclock(clock)
     drawbutton(playbutton)
 
@@ -77,8 +76,6 @@ function game.draw()
     lg.print("Thruster: " .. thrusterl * 100 .. "% " .. thrusterr * 100 .. "%", 30, lg.getHeight() - 30)
     lg.print("Speed: " .. speed, 30, lg.getHeight() - 60)
     lg.print("Rot Speed: " .. rotspeed, 30, lg.getHeight() - 90)
-    lg.print("Time: " .. timer, clock.x, clock.y)
-
     -- player.debugcollision(tiles.data)
 end
 

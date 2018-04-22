@@ -8,7 +8,7 @@ function love.load()
     currentscene = 3
 
     -- Assets
-
+    love.graphics.setDefaultFilter("nearest", "nearest", 1)
     sprites = {}
     sprites.bg = love.graphics.newImage("sprites/bg.png")
     sprites.player = love.graphics.newImage("sprites/ship.png")

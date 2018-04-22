@@ -4,13 +4,14 @@ function checkinside(x, y, button)
 end
 
 -- Sliders
-function newslider(x)
+function newslider(x, n)
     local slider = {}
     slider.x = x
     slider.y = 460
-    slider.w = 50
+    slider.w = 40
     slider.h = 130
     slider.v = 0
+    slider.n = n
     slider.bg = sprites.thrusterbg
     slider.hand = sprites.thrusterslider
 
@@ -19,16 +20,12 @@ end
 
 function drawslider(slider)
     love.graphics.draw(slider.bg, slider.x, slider.y)
-    love.graphics.draw(
-        slider.hand,
-        slider.x,
-        slider.y + (1 - slider.v) * slider.h,
-        nil,
-        nil,
-        nil,
-        0,
-        slider.hand:getHeight() / 2
-    )
+    local handx = slider.x
+    if slider.n == 1 then
+        handx = handx - 20
+    end
+    local handy = slider.y + (1 - slider.v) * slider.h
+    love.graphics.draw(slider.hand, handx, handy, nil, nil, nil, 0, slider.hand:getHeight() / 2)
 end
 
 function clickslider(x, y, slider)
@@ -71,29 +68,28 @@ function newclock(x, y, r)
     clock.hand = sprites.clockhand
     clock.v = 0
     clock.hox = 5
-    clock.hoy = sprites.clockhand:getHeight() / 2
+    clock.hoy = 5
     return clock
 end
 
 function clickclock(x, y, clock)
-    if distanceto(x, y, clock.x, clock.y) < clock.r then
-        clock.v = 0.5 - (anglebetween(clock.y, clock.x, y, x) / (math.pi * 2))
+    if y <= clock.y and distanceto(x, y, clock.x, clock.y) < clock.r then
+        clock.v = (anglebetween(x, y, clock.x, clock.y) / (math.pi))
         clock.v = math.ceil(clock.v * 100) / 100
         return true
+    elseif y <= clock.y + 5 and y > clock.y then
+        if x < clock.x then
+            clock.v = 0
+        else
+            clock.v = 1
+        end
     end
     return false
 end
 
 function drawclock(clock)
     love.graphics.draw(clock.bg, clock.x, clock.y, nil, nil, nil, clock.r, clock.r)
-    love.graphics.draw(
-        clock.hand,
-        clock.x,
-        clock.y,
-        clock.v * (2 * math.pi) - math.pi / 2,
-        nil,
-        nil,
-        clock.hox,
-        clock.hoy
-    )
+    local rot = clock.v * (math.pi) - math.pi
+    love.graphics.draw(clock.hand, clock.x, clock.y, rot, nil, nil, clock.hox, clock.hoy)
+    love.graphics.print("Time: " .. clock.v, clock.x, clock.y)
 end
