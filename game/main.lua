@@ -4,7 +4,6 @@ function love.load()
         1 - Title Screen
         2 - Stage Select
         3 - Game
-        4 - Credits
     ]]
     currentscene = 1
 
@@ -21,6 +20,7 @@ function love.load()
     sprites.clockhand = love.graphics.newImage("sprites/clockhand.png")
     sprites.pinkbutton = love.graphics.newImage("sprites/pinkbutton.png")
 
+    -- font from: https://love2d.org/wiki/File:Resource-Imagefont.png
     fonts = {}
     fonts.small =
         love.graphics.newImageFont(
@@ -32,7 +32,6 @@ function love.load()
     game = require("scenes/game")
     titlescreen = require("scenes/titlescreen")
     stageselect = require("scenes/stageselect")
-    credits = require("scenes/credits")
 
     -- Libraries
     lovesize = require("lovesize/lovesize")
@@ -43,7 +42,6 @@ function love.load()
     game.init()
     titlescreen.init()
     stageselect.init()
-    credits.init()
 
     local flags = {}
     flags.resizable = true
@@ -59,8 +57,6 @@ function love.update(dt)
         stageselect.update(dt)
     elseif currentscene == 3 then
         game.update(dt)
-    elseif currentscene == 4 then
-        credits.update(dt)
     end
 end
 
@@ -73,8 +69,6 @@ function love.draw()
         stageselect.draw()
     elseif currentscene == 3 then
         game.draw()
-    elseif currentscene == 4 then
-        credits.draw()
     end
     lovesize.finish()
 end
@@ -91,7 +85,5 @@ function love.mousepressed(x, y, button, istouch)
         stageselect.mousepressed(mx, my, button)
     elseif currentscene == 3 then
         game.mousepressed(mx, my, button)
-    elseif currentscene == 4 then
-        credits.mousepressed(mx, my, button)
     end
 end

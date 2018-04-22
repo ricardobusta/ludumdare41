@@ -43,7 +43,7 @@ function clickslider(x, y, slider)
 end
 
 -- Buttons
-function newbutton(x, y, sprite, text)
+function newbutton(x, y, sprite, text, textoffset)
     local button = {}
     button.x = x
     button.y = y
@@ -51,13 +51,14 @@ function newbutton(x, y, sprite, text)
     button.h = sprite:getHeight()
     button.sprite = sprite
     button.text = text or ""
+    button.toff = textoffset or 0
 
     return button
 end
 
 function drawbutton(button)
     love.graphics.draw(button.sprite, button.x, button.y)
-    love.graphics.printf(button.text, button.x, button.y, button.w, "center")
+    love.graphics.printf(button.text, button.x, button.y + button.h / 2 - button.toff, button.w, "center")
 end
 
 -- Clocks
