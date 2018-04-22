@@ -1,5 +1,15 @@
 game = require("game")
+titlescreen = require("scenes/titlescreen")
 lovesize = require("lovesize/lovesize")
+
+--[[
+    Scenes:
+    1 - Title Screen
+    2 - Stage Select
+    3 - Game
+    4 - Credits
+]]
+currentscene = 1
 
 function love.load()
     lovesize.set(800, 600)
@@ -13,13 +23,23 @@ function love.load()
 end
 
 function love.update(dt)
-    game.update(dt)
+    if currentscene == 1 then
+    elseif currentscene == 2 then
+    elseif currentscene == 3 then
+    elseif currentscene == 4 then
+        game.update(dt)
+    end
 end
 
 function love.draw()
     love.graphics.clear(0.91, 0.78, 0.46)
     lovesize.begin()
-    game.draw()
+    if currentscene == 1 then
+    elseif currentscene == 2 then
+    elseif currentscene == 3 then
+    elseif currentscene == 4 then
+        game.draw()
+    end
     lovesize.finish()
 end
 
@@ -29,5 +49,10 @@ end
 
 function love.mousepressed(x, y, button, istouch)
     local mx, my = lovesize.pos(x, y)
-    game.mousepressed(mx, my, button)
+    if currentscene == 1 then
+    elseif currentscene == 2 then
+    elseif currentscene == 3 then
+    elseif currentscene == 4 then
+        game.mousepressed(mx, my, button)
+    end
 end

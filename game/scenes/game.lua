@@ -19,6 +19,12 @@ function game.init()
     sprites.playbutton = love.graphics.newImage("sprites/playbutton.png")
     sprites.clockhand = love.graphics.newImage("sprites/clockhand.png")
 
+    font =
+        love.graphics.newImageFont(
+        "font/font.png",
+        ' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`\'*#=[]"'
+    )
+
     clock = newclock(375, 525, 65)
 
     playbutton = newbutton(510, 460, sprites.playbutton)
@@ -66,8 +72,8 @@ function game.draw()
     drawclock(clock)
     drawbutton(playbutton)
 
-    love.graphics.setFont(love.graphics.newFont(20))
-    love.graphics.print("Thruster: " .. thrusterl*100 .. "% " .. thrusterr*100 .. "%", 0, 0)
+    love.graphics.setFont(font)
+    love.graphics.print("Thruster: " .. thrusterl * 100 .. "% " .. thrusterr * 100 .. "%", 0, 0)
     love.graphics.print("Time: " .. timer, 0, 20)
 end
 
