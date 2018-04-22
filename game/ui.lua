@@ -34,7 +34,7 @@ end
 function clickslider(x, y, slider)
     if checkinside(x, y, slider) then
         local v = 1 - (y - (slider.y + 5)) / (slider.h - 10)
-        v = math.floor(v*100)/100
+        v = math.floor(v * 100) / 100
         v = math.min(1, math.max(0, v))
         slider.v = v
         return true
@@ -47,8 +47,8 @@ function newbutton(x, y, sprite)
     local button = {}
     button.x = x
     button.y = y
-    button.w = 130
-    button.h = 130
+    button.w = sprite:getWidth()
+    button.h = sprite:getHeight()
     button.sprite = sprite
 
     return button
@@ -75,7 +75,7 @@ end
 function clickclock(x, y, clock)
     if distanceto(x, y, clock.x, clock.y) < clock.r then
         clock.v = 0.5 - (anglebetween(clock.y, clock.x, y, x) / (math.pi * 2))
-        clock.v = math.ceil(clock.v*100)/100
+        clock.v = math.ceil(clock.v * 100) / 100
         return true
     end
     return false

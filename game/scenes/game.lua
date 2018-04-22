@@ -1,29 +1,32 @@
 local game = {}
 
+-- Game Objects
+local player = require("player")
+local map = nil
+local clock = nil
+local playbutton = nil
+local sliderl = nil
+local sliderr = nil
+local thrusterl = 0
+local thrusterr = 0
+local timer = 0
+local countdown = 0
+
+-- Game Constants
+local maxtimer = 2
+
+--[[
+    Game States:
+    1 - Waiting for player input
+    2 - Simulation
+]]
+local gamestate = 1
+
 function game.init()
-    ui = require("ui")
-    calc = require("calc")
-    player = require("player")
     player.init()
 
     local tiled = require("tiled/sti")
     map = tiled("maps/map.lua")
-
-    sprites = {}
-    sprites.bg = love.graphics.newImage("sprites/bg.png")
-    sprites.player = love.graphics.newImage("sprites/ship.png")
-    sprites.hudbg = love.graphics.newImage("sprites/hudbg.png")
-    sprites.thrusterbg = love.graphics.newImage("sprites/thrusterbg.png")
-    sprites.thrusterslider = love.graphics.newImage("sprites/thrusterslider.png")
-    sprites.clockbg = love.graphics.newImage("sprites/clockbg.png")
-    sprites.playbutton = love.graphics.newImage("sprites/playbutton.png")
-    sprites.clockhand = love.graphics.newImage("sprites/clockhand.png")
-
-    font =
-        love.graphics.newImageFont(
-        "font/font.png",
-        ' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`\'*#=[]"'
-    )
 
     clock = newclock(375, 525, 65)
 
@@ -31,20 +34,6 @@ function game.init()
 
     sliderl = newslider(60)
     sliderr = newslider(210)
-
-    --[[
-        Game States:
-        1 - Waiting for player input
-        2 - Simulation
-    ]]
-    gamestate = 1
-
-    maxtimer = 2
-
-    thrusterl = 0
-    thrusterr = 0
-    timer = 0
-    countdown = 0
 end
 
 function game.update(dt)
