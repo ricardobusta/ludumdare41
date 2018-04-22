@@ -1,13 +1,14 @@
 local player = {}
 
 -- Constant Parameters
-local twopi = math.pi*2
-local size = 16 -- spaceship size
-local tileradius = 16*math.sqrt(2)
+local twopi = math.pi * 2
+local size2 = 32
+local size = size2 / 2
+local tileship2 = (size * math.sqrt(2) + size) ^ 2 -- max distance to the center of the tile to the center of the ship
 local tacc = 200 -- thruster acceleration
 local grav = 80 -- gravity
 local deadlyspeed = 100
-local minangle = math.pi/6 
+local minangle = math.pi / 6
 local maxangle = twopi - minangle
 
 -- Player State
@@ -20,6 +21,7 @@ local sl, sr = 0, 0 -- speed from thrusters
 local tx, ty = 0, 0 -- player in tile coordinates
 local speed = 0
 local dead = false
+local landed = false
 
 -- References
 local lg = love.graphics
@@ -29,8 +31,8 @@ local spry = 0
 
 function player.init()
     sprite = sprites.player
-    sprx = sprite:getWidth()/2
-    spry = sprite:getHeight()/2
+    sprx = sprite:getWidth() / 2
+    spry = sprite:getHeight() / 2
 end
 
 function player.thrust(l, r)
@@ -40,6 +42,9 @@ function player.thrust(l, r)
 end
 
 function player.update(dt)
+    if landed then
+        return
+    end
     local acc = tacc * (sl + sr) -- acceleration is the sum of both thrusters
 
     -- Accelerate the ship
@@ -60,7 +65,6 @@ function player.update(dt)
 end
 
 function player.draw()
-    -- love.graphics.circle("fill", px, py, size)
     lg.draw(sprite, px, py, rot, nil, nil, sprx, spry)
 end
 
@@ -68,37 +72,87 @@ function player.getinfo()
     return speed, srot, tx, ty, dead
 end
 
-function player.detectcollision(tiles, ox, oy)
-    local x, y = tx + ox, ty + oy
-    local mx, my = x + 1, y + 1
-    if tiles[my] and tiles[my][mx] and collidewithtile(x,y) then
-        if tiles[my][mx].id >= 12 and survivableconditions() then
-            dead = false
-        else
-            dead = true
+local debugstring = ""
+
+function player.detectcollision(tiles)
+    local mx, my = (tx + 1), (ty + 1) -- center in tile coord
+    local cx, cy = tx * size2 + size, ty * size2 + size -- center in pixel coord
+
+    dead = false
+    local collide = false
+
+    collide =
+        collidewithtile(tiles, tx, ty) or collidewithtile(tiles, tx + 1, ty) or collidewithtile(tiles, tx + 1, ty + 1) or
+        collidewithtile(tiles, tx, ty + 1)
+
+    debugstring = string.format("%s",collide)
+
+    return collide
+end
+
+function collidewithtile(tiles, x, y)
+    local mx, my = (x + 1), (y + 1) -- center in tile coord
+    local cx, cy = x * size2 + size, y * size2 + size -- center in pixel coord
+
+    if tiles[my] and tiles[my][mx] then
+        if math.abs(px - cx) <= size or math.abs(py - cy) <= size or distanceto2(cx, cy, px, py) <= tileship2 then
+            if tiles[my][mx].id < 12 or player.dieconditions()  then
+                dead = true
+            end
+            return true
         end
-        return true
     end
     return false
 end
 
-local function survivableconditions()
-    return speed < deadlyspeed and (rot > maxangle or rot < minangle)
+function player.dieconditions()
+    return (speed >= deadlyspeed or (rot <= maxangle and rot >= minangle))
 end
 
-local function collidewithtile(x, y)
-    if 
+function player.debugcollision(tiles)
+    player.debugcollisiontile(tiles, 0, 0)
+    player.debugcollisiontile(tiles, 1, 0)
+    player.debugcollisiontile(tiles, 0, 1)
+    player.debugcollisiontile(tiles, 1, 1)
+
+    lg.circle("line", px, py, 16)
+    lg.print(debugstring .. string.format("%s",player.dieconditions()), 0, 60)
 end
 
-function player.debugcollision(tiles, ox, oy)
+function player.debugcollisiontile(tiles, ox, oy)
     local x, y = tx + ox, ty + oy
     local mx, my = x + 1, y + 1
     if tiles[my] and tiles[my][mx] then
         lg.print(tiles[my][mx].id, x * 32, y * 32)
     end
-    lg.print(x .. " " .. y .. " " .. rot)
+    lg.print(debugstring)
 
     lg.rectangle("line", x * 32, y * 32, 32, 32)
+end
+
+function player.debugposition()
+    local x, y = lovesize.pos(love.mouse.getX(), love.mouse.getY())
+    px, py = x, y
+end
+
+function player.land()
+    landed = true
+    sx = 0
+    sy = 0
+    rot = 0
+    py = math.floor((py+16)/32)*32-16
+end
+
+function player.fly()
+    landed = false
+end
+
+function player.islanded()
+    return landed
+end
+
+function player.isdead()
+    return dead
 end
 
 return player

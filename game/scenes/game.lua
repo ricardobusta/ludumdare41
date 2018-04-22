@@ -15,9 +15,6 @@ local timer = 0
 local countdown = 0
 local speed = 0
 local rotspeed = 0
-local tilex = 0
-local tiley = 0
-local dead = false
 
 -- References
 local lg = love.graphics
@@ -82,14 +79,28 @@ function game.draw()
     lg.print("Rot Speed: " .. rotspeed, 30, lg.getHeight() - 90)
     lg.print("Time: " .. timer, clock.x, clock.y)
 
-    -- player.debugcollision(tiles.data, 0, 0)
-    -- player.debugcollision(tiles.data, 1, 0)
-    -- player.debugcollision(tiles.data, 0, 1)
-    -- player.debugcollision(tiles.data, 1, 1)
+    -- player.debugcollision(tiles.data)
 end
 
 function game.update(dt)
     if gamestate == 1 then
+        if lm.isDown(1) then
+            local x, y = lovesize.pos(lm:getX(), lm:getY())
+            -- Check collision with sliders
+            if clickslider(x, y, sliderl) then
+                thrusterl = sliderl.v
+            elseif clickslider(x, y, sliderr) then
+                thrusterr = sliderr.v
+            elseif clickslider(x, y, sliderboth) then
+                sliderl.v = sliderboth.v
+                sliderr.v = sliderboth.v
+                thrusterr = sliderr.v
+                thrusterl = sliderl.v
+            elseif -- Check collision with clock
+                clickclock(x, y, clock) then
+                timer = clock.v * maxtimer
+            end
+        end
     elseif gamestate == 2 then
         -- Timer finished
         if countdown <= 0 then
@@ -99,39 +110,30 @@ function game.update(dt)
             thrustsrcr:stop()
             return
         end
+        countdown = countdown - dt
+        clock.v = countdown / maxtimer
+
+        if player.islanded() then
+            return
+        end
         -- Main loop
         player.thrust(thrusterl, thrusterr)
         player.update(dt)
-        countdown = countdown - dt
-        clock.v = countdown / maxtimer
-        speed, rotspeed, tilex, tiley, dead = player.getinfo()
 
         -- Collision
-        local collide = player.detectcollision(tiles.data, 0, 0) or player.detectcollision(tiles.data, 1, 0)
-        collide = collide or player.detectcollision(tiles.data, 0, 1) or player.detectcollision(tiles.data, 1, 1)
-        if collide then
-            if dead == true then
+        if player.detectcollision(tiles.data) then
+            if player.isdead() then
                 gamestate = 3
-                thrustsrcl:stop()
-                thrustsrcr:stop()
                 explosion:play()
+            elseif win then
+                -- Landed objective!
+                gamestate = 3
+            else
+                -- Landed start
+                player.land()
             end
-        end
-    end
-
-    if lm.isDown(1) then
-        local x, y = lovesize.pos(lm:getX(), lm:getY())
-        -- Check collision with sliders
-        if clickslider(x, y, sliderl) then
-            thrusterl = sliderl.v
-        elseif clickslider(x, y, sliderr) then
-            thrusterr = sliderr.v
-        elseif clickslider(x, y, sliderboth) then
-            sliderl.v = sliderboth.v
-            sliderr.v = sliderboth.v
-        elseif -- Check collision with clock
-            clickclock(x, y, clock) then
-            timer = clock.v * maxtimer
+            thrustsrcl:stop()
+            thrustsrcr:stop()
         end
     end
 end
@@ -142,10 +144,19 @@ function game.mousepressed(x, y, button)
         if checkinside(x, y, playbutton) then
             gamestate = 2
             countdown = timer
-            thrustsrcl:setPitch(thrusterr * 0.8 + 0.2)
-            thrustsrcr:setPitch(thrusterl * 0.8 + 0.2)
-            thrustsrcl:play()
-            thrustsrcr:play()
+            player.fly()
+            if thrusterl > 0 then
+                thrustsrcr:setPitch(thrusterl * 0.8 + 0.2)
+                thrustsrcl:play()
+            end
+            if thrusterr > 0 then
+                thrustsrcl:setPitch(thrusterr * 0.8 + 0.2)
+                thrustsrcr:play()
+            end
+        end
+
+        if (y < 448) then
+            player.debugposition(x, y)
         end
     end
 end
