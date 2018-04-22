@@ -5,7 +5,7 @@ function love.load()
         2 - Stage Select
         3 - Game
     ]]
-    currentscene = 1
+    currentscene = 3
 
     -- Assets
 
@@ -27,6 +27,15 @@ function love.load()
         "font/font.png",
         ' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`\'*#=[]"'
     )
+
+    musics = {}
+    musics.game = love.audio.newSource("music/airshipserenity.mp3", "stream")
+    musics.game:setLooping(true)
+    musics.title = love.audio.newSource("music/mightylikeus.mp3", "stream")
+    musics.title:setLooping(true)
+    musics.title:play()
+
+    currentmusic = musics.game
 
     -- Scenes
     game = require("scenes/game")
