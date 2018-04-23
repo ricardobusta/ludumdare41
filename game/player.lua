@@ -33,6 +33,8 @@ local sprite = nil
 local sprx = 0
 local spry = 0
 
+local spawnx, spawny = 0, 0
+
 function player.init()
     sprite = sprites.player
     sprx = sprite:getWidth() / 2
@@ -83,8 +85,6 @@ function player.getinfo()
     return speed, srot
 end
 
-local debugstring = ""
-
 function player.detectcollision(tiles)
     local mx, my = (tx + 1), (ty + 1) -- center in tile coord
     local cx, cy = tx * size2 + size, ty * size2 + size -- center in pixel coord
@@ -96,8 +96,6 @@ function player.detectcollision(tiles)
     collide =
         collidewithtile(tiles, tx, ty) or collidewithtile(tiles, tx + 1, ty) or collidewithtile(tiles, tx + 1, ty + 1) or
         collidewithtile(tiles, tx, ty + 1)
-
-    debugstring = string.format("%s", collide)
 
     return collide
 end
@@ -131,7 +129,6 @@ function player.debugcollision(tiles)
     player.debugcollisiontile(tiles, 1, 1)
 
     lg.circle("line", px, py, 16)
-    lg.print(debugstring .. string.format("%s", player.dieconditions()), 0, 60)
 end
 
 function player.debugcollisiontile(tiles, ox, oy)
@@ -140,7 +137,6 @@ function player.debugcollisiontile(tiles, ox, oy)
     if tiles[my] and tiles[my][mx] then
         lg.print(tiles[my][mx].id, x * 32, y * 32)
     end
-    lg.print(debugstring)
 
     lg.rectangle("line", x * 32, y * 32, 32, 32)
 end
@@ -157,10 +153,8 @@ function player.land()
 end
 
 function player.reset()
-    sx = 0
-    sy = 0
-    rot = 0
-    srot = 0
+    sx, sy, rot, srot = 0, 0, 0, 0
+    px, py = spawnx, spawny
 end
 
 function player.fly()
@@ -177,6 +171,10 @@ end
 
 function player.iswin()
     return win
+end
+
+function setspawn(x, y)
+    spawnx, spawny = x, y
 end
 
 return player

@@ -47,6 +47,7 @@ function stageselect.mousepressed(x, y, button)
         for _, b in ipairs(buttons) do
             if checkinside(x, y, b) then
                 selectedstage = b.s
+                stageselect.stagespawn()
                 musics.title:stop()
                 musics.game:play()
                 currentscene = 3
@@ -54,6 +55,19 @@ function stageselect.mousepressed(x, y, button)
                 return
             end
         end
+    end
+end
+
+function stageselect.stagespawn()
+    local s = selectedstage
+    if s == 1 then
+        setspawn(98,140)
+    elseif s == 2 then
+        setspawn(130,360)
+    elseif s == 3 then
+        setspawn(98,360)
+    elseif s == 4 then
+        setspawn(130,140)
     end
 end
 

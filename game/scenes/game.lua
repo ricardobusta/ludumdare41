@@ -250,15 +250,15 @@ function game.mousepressed(x, y, button)
             end
         end
 
-        -- Debug only
-        if y < 448 then
-            player.debugposition()
-        end
+    -- Debug only
+    -- if y < 448 then
+    --     player.debugposition()
+    -- end
     end
 end
 
 function game.playagain()
-    tiles = map.layers["Tiles"..selectedstage]
+    tiles = map.layers["Tiles" .. selectedstage]
     game.reset()
 end
 
@@ -270,7 +270,6 @@ function game.quit()
 end
 
 function game.reset()
-    player.setpos(100, 100)
     player.reset()
     gamestate = 1
     player.fly()
