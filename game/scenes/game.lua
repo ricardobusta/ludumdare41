@@ -18,6 +18,7 @@ local timer = 0
 local countdown = 0
 local speed = 0
 local rotspeed = 0
+local turns = 0
 
 -- References
 local lg = love.graphics
@@ -80,11 +81,12 @@ function game.draw()
     local pany = 463
     lg.setFont(fonts.panel)
     lg.draw(sprites.infopanel, 35, 463)
-    lg.printf(string.format("%03.0f", thrusterl * 100) .. "%", panx + 10, pany + 95, 100, "left")
-    lg.printf(string.format("%03.0f", thrusterr * 100) .. "%", panx + 10, pany + 95, 100, "right")
+    lg.print(string.format("%03.0f", thrusterl * 100) .. "%", panx + 100, pany + 92)
+    lg.print(string.format("%03.0f", thrusterr * 100) .. "%", panx + 189, pany + 92)
 
     lg.printf(math.floor(speed), panx, pany + 8, 113, "right")
-    lg.printf(math.abs(math.floor(rotspeed * radtodeg)), panx, pany + 36, 113, "right")
+    lg.printf(math.abs(math.floor(rotspeed * radtodeg)), panx, pany + 42, 113, "right")
+    lg.printf(turns, panx, pany + 92, 80, "right")
 end
 
 function game.update(dt)
@@ -153,6 +155,7 @@ function game.mousepressed(x, y, button)
             gamestate = 2
             countdown = timer
             player.fly()
+            turns = turns + 1
             playbutton.sprite = sprites.playbuttonoff
             if thrusterl > 0 then
                 thrustsrcr:setPitch(thrusterl * 0.8 + 0.2)
