@@ -7,8 +7,8 @@ local size = size2 / 2
 local tileship2 = (size * math.sqrt(2) + size) ^ 2 -- max distance to the center of the tile to the center of the ship
 local tacc = 200 -- thruster acceleration
 local grav = 80 -- gravity
-local deadlyspeed = 100
-local minangle = math.pi / 8
+local deadlyspeed = 50
+local minangle = math.pi / 9
 local maxangle = twopi - minangle
 
 -- Player State

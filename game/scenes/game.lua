@@ -59,7 +59,7 @@ function game.init()
 
     clock = newclock(540, 575, 65)
 
-    playbutton = newbutton(660, 460, sprites.playbutton)
+    playbutton = newbutton(635, 512, sprites.playbutton)
 
     local x = 320
     sliderl = newslider(x, -1)
