@@ -11,9 +11,13 @@ local back = nil
 
 function stageselect.init()
     stage1 = newbutton(300, 100, sprites.pinkbutton, "stage 1", 8)
+    stage1.s = 1
     stage2 = newbutton(300, 200, sprites.pinkbutton, "stage 2", 8)
+    stage2.s = 2
     stage3 = newbutton(300, 300, sprites.pinkbutton, "stage 3", 8)
+    stage3.s = 3
     stage4 = newbutton(300, 400, sprites.pinkbutton, "stage 4", 8)
+    stage4.s = 4
     back = newbutton(50, 500, sprites.pinkbutton, "back", 8)
 
     table.insert(buttons, stage1)
@@ -42,9 +46,12 @@ function stageselect.mousepressed(x, y, button)
         end
         for _, b in ipairs(buttons) do
             if checkinside(x, y, b) then
-                currentscene = 3
+                selectedstage = b.s
                 musics.title:stop()
                 musics.game:play()
+                currentscene = 3
+                game.playagain()
+                return
             end
         end
     end

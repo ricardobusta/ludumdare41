@@ -22,6 +22,7 @@ local tx, ty = 0, 0 -- player in tile coordinates
 local speed = 0
 local dead = false
 local landed = false
+local win = false
 
 local diebyspeed = false
 local diebyrotation = false
@@ -89,6 +90,7 @@ function player.detectcollision(tiles)
     local cx, cy = tx * size2 + size, ty * size2 + size -- center in pixel coord
 
     dead = false
+    win = false
     local collide = false
 
     collide =
@@ -105,9 +107,12 @@ function collidewithtile(tiles, x, y)
     local cx, cy = x * size2 + size, y * size2 + size -- center in pixel coord
 
     if tiles[my] and tiles[my][mx] then
+        local tid = tiles[my][mx].id
         if math.abs(px - cx) <= size or math.abs(py - cy) <= size or distanceto2(cx, cy, px, py) <= tileship2 then
-            if tiles[my][mx].id < 12 or player.dieconditions() then
+            if tid < 12 or player.dieconditions() then
                 dead = true
+            elseif tid == 14 or tid == 15 then
+                win = true
             end
             return true
         end
@@ -168,6 +173,10 @@ end
 
 function player.isdead()
     return dead
+end
+
+function player.iswin()
+    return win
 end
 
 return player

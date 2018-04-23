@@ -34,6 +34,8 @@ local explosion = la.newSource("sfx/explosion.wav", "static")
 -- Game Constants
 maxtimer = 2
 
+selectedstage = 2
+
 --[[
     Game States:
     1 - Waiting for player input
@@ -57,7 +59,6 @@ function game.init()
     clock = newclock(540, 575, 65)
 
     playbutton = newbutton(635, 512, sprites.playbuttonoff)
-    game.playagain()
 
     resetbutton = newbutton(730, 480, sprites.lightred, "Reset", 5)
     quitbutton = newbutton(730, 550, sprites.lightred, "Quit", 5)
@@ -69,6 +70,10 @@ function game.init()
     sliderl = newslider(x, -1)
     sliderboth = newslider(x + 40, 0)
     sliderr = newslider(x + 80, 1)
+
+    map = tiled("maps/map.lua")
+
+    game.playagain()
 end
 
 function game.draw()
@@ -193,9 +198,9 @@ function game.update(dt)
             if player.isdead() then
                 gamestate = 3
                 explosion:play()
-            elseif win then
+            elseif player.iswin() then
                 -- Landed objective!
-                gamestate = 3
+                gamestate = 4
             else
                 -- Landed start
                 player.land()
@@ -244,12 +249,16 @@ function game.mousepressed(x, y, button)
                 game.quit()
             end
         end
+
+        -- Debug only
+        if y < 448 then
+            player.debugposition()
+        end
     end
 end
 
 function game.playagain()
-    map = tiled("maps/map.lua")
-    tiles = map.layers["Tiles1"]
+    tiles = map.layers["Tiles"..selectedstage]
     game.reset()
 end
 
@@ -267,6 +276,15 @@ function game.reset()
     player.fly()
     countdown = 0
     playbutton.sprite = sprites.playbutton
+    turns = 0
+    thrusterl = 0
+    thrusterr = 0
+    sliderl.v = 0
+    sliderr.v = 0
+    timer = 0
+    clock.v = 0
+    speed = 0
+    rotspeed = 0
 end
 
 return game
