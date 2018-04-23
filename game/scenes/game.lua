@@ -80,13 +80,20 @@ function game.draw()
     local panx = 35
     local pany = 463
     lg.setFont(fonts.panel)
-    lg.draw(sprites.infopanel, 35, 463)
+    lg.draw(sprites.infopanel, panx, pany)
     lg.print(string.format("%03.0f", thrusterl * 100) .. "%", panx + 100, pany + 92)
     lg.print(string.format("%03.0f", thrusterr * 100) .. "%", panx + 189, pany + 92)
 
     lg.printf(math.floor(speed), panx, pany + 8, 113, "right")
     lg.printf(math.abs(math.floor(rotspeed * radtodeg)), panx, pany + 42, 113, "right")
     lg.printf(turns, panx, pany + 92, 80, "right")
+    if rotspeed > 0.01 or rotspeed < -0.01 then
+        local s = 1
+        if rotspeed>0 then
+            s = -1
+        end
+        lg.draw(sprites.rotate, panx + 197, pany + 37, nil, s, 1, sprites.rotate:getWidth()/2, sprites.rotate:getHeight()/2)
+    end
 end
 
 function game.update(dt)

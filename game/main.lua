@@ -23,6 +23,7 @@ function love.load()
     sprites.clockhandoff = love.graphics.newImage("sprites/clockhandoff.png")
     sprites.pinkbutton = love.graphics.newImage("sprites/pinkbutton.png")
     sprites.infopanel = love.graphics.newImage("sprites/infopanel.png")
+    sprites.rotate = love.graphics.newImage("sprites/rotateccw.png")
 
     -- font from: https://love2d.org/wiki/File:Resource-Imagefont.png
     fonts = {}
