@@ -10,11 +10,11 @@ local stage4 = nil
 local back = nil
 
 function stageselect.init()
-    stage1 = newbutton(100, 100, sprites.pinkbutton, "stage 1", 8)
-    stage2 = newbutton(100, 200, sprites.pinkbutton, "stage 2", 8)
-    stage3 = newbutton(100, 300, sprites.pinkbutton, "stage 3", 8)
-    stage4 = newbutton(100, 400, sprites.pinkbutton, "stage 4", 8)
-    back = newbutton(100, 500, sprites.pinkbutton, "back", 8)
+    stage1 = newbutton(300, 100, sprites.pinkbutton, "stage 1", 8)
+    stage2 = newbutton(300, 200, sprites.pinkbutton, "stage 2", 8)
+    stage3 = newbutton(300, 300, sprites.pinkbutton, "stage 3", 8)
+    stage4 = newbutton(300, 400, sprites.pinkbutton, "stage 4", 8)
+    back = newbutton(50, 500, sprites.pinkbutton, "back", 8)
 
     table.insert(buttons, stage1)
     table.insert(buttons, stage2)
