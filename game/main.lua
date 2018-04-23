@@ -5,7 +5,7 @@ function love.load()
         2 - Stage Select
         3 - Game
     ]]
-    currentscene = 3
+    currentscene = 1
 
     -- Assets
     love.graphics.setDefaultFilter("nearest", "nearest", 1)
@@ -67,7 +67,7 @@ function love.load()
     flags.resizable = true
     love.window.setMode(lovesize.getWidth(), lovesize.getHeight(), flags)
 
-    love.window.setTitle("Ludum Dare 41 - Ricardo & Vanessa")
+    love.window.setTitle("Ro'Cat Science! - Ludum Dare 41")
 end
 
 function love.update(dt)

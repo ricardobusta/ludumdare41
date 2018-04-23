@@ -54,17 +54,16 @@ function game.init()
 
     explosion:setVolume(0.8)
 
-    game.playagain()
-
     clock = newclock(540, 575, 65)
 
-    playbutton = newbutton(635, 512, sprites.playbutton)
+    playbutton = newbutton(635, 512, sprites.playbuttonoff)
+    game.playagain()
 
     resetbutton = newbutton(730, 480, sprites.lightred, "Reset", 5)
     quitbutton = newbutton(730, 550, sprites.lightred, "Quit", 5)
 
-    resetbutton2 = newbutton(400, 300, sprites.pinkbutton, "Reset", 7)
-    quitbutton2 = newbutton(400, 350, sprites.pinkbutton, "Quit", 7)
+    resetbutton2 = newbutton(300, 300, sprites.pinkbutton, "Reset", 7)
+    quitbutton2 = newbutton(300, 400, sprites.pinkbutton, "Quit", 7)
 
     local x = 310
     sliderl = newslider(x, -1)
@@ -161,6 +160,12 @@ function game.update(dt)
                 timer = clock.v
             end
         end
+
+        if clock.v < 0.01 then
+            playbutton.sprite = sprites.playbuttonoff
+        else
+            playbutton.sprite = sprites.playbutton
+        end
     elseif gamestate == 2 then
         -- Timer finished
         if countdown <= 0 then
@@ -205,7 +210,7 @@ function game.mousepressed(x, y, button)
     if button == 1 then
         if gamestate == 1 then
             -- Check collision with play button
-            if checkinside(x, y, playbutton) then
+            if checkinside(x, y, playbutton) and clock.v >= 0.01 then
                 gamestate = 2
                 countdown = timer
                 player.fly()
@@ -245,16 +250,23 @@ end
 function game.playagain()
     map = tiled("maps/map.lua")
     tiles = map.layers["Tiles1"]
+    game.reset()
+end
+
+function game.quit()
+    game.reset()
+    musics.title:play()
+    musics.game:stop()
+    currentscene = 1
+end
+
+function game.reset()
     player.setpos(100, 100)
     player.reset()
     gamestate = 1
     player.fly()
-end
-
-function game.quit()
-    musics.title:play()
-    musics.game:stop()
-    currentscene = 1
+    countdown = 0
+    playbutton.sprite = sprites.playbutton
 end
 
 return game
