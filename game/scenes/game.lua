@@ -1,5 +1,8 @@
 local game = {}
 
+-- constants
+local radtodeg = 180 / math.pi
+
 -- Game Objects
 local player = require("player")
 local map = nil
@@ -27,7 +30,7 @@ local thrustsrcr = la.newSource("sfx/thrust.wav", "static")
 local explosion = la.newSource("sfx/explosion.wav", "static")
 
 -- Game Constants
-local maxtimer = 2
+maxtimer = 2
 
 --[[
     Game States:
@@ -36,7 +39,7 @@ local maxtimer = 2
     3 - Game Over
     4 - Win
 ]]
-local gamestate = 1
+gamestate = 1
 
 function game.init()
     player.init()
@@ -53,13 +56,14 @@ function game.init()
     map = tiled("maps/map.lua")
     tiles = map.layers["Tiles1"]
 
-    clock = newclock(375, 535, 65)
+    clock = newclock(540, 575, 65)
 
-    playbutton = newbutton(510, 460, sprites.playbutton)
+    playbutton = newbutton(660, 460, sprites.playbutton)
 
-    sliderl = newslider(60, -1)
-    sliderboth = newslider(100, 0)
-    sliderr = newslider(140, 1)
+    local x = 320
+    sliderl = newslider(x, -1)
+    sliderboth = newslider(x + 40, 0)
+    sliderr = newslider(x + 80, 1)
 end
 
 function game.draw()
@@ -72,11 +76,15 @@ function game.draw()
     drawclock(clock)
     drawbutton(playbutton)
 
-    lg.setFont(fonts.small)
-    lg.print("Thruster: " .. thrusterl * 100 .. "% " .. thrusterr * 100 .. "%", 30, lg.getHeight() - 30)
-    lg.print("Speed: " .. speed, 30, lg.getHeight() - 60)
-    lg.print("Rot Speed: " .. rotspeed, 30, lg.getHeight() - 90)
-    -- player.debugcollision(tiles.data)
+    local panx = 35
+    local pany = 463
+    lg.setFont(fonts.panel)
+    lg.draw(sprites.infopanel, 35, 463)
+    lg.printf(string.format("%03.0f", thrusterl * 100) .. "%", panx + 10, pany + 95, 100, "left")
+    lg.printf(string.format("%03.0f", thrusterr * 100) .. "%", panx + 10, pany + 95, 100, "right")
+
+    lg.printf(math.floor(speed), panx, pany + 8, 113, "right")
+    lg.printf(math.abs(math.floor(rotspeed * radtodeg)), panx, pany + 36, 113, "right")
 end
 
 function game.update(dt)
@@ -95,20 +103,21 @@ function game.update(dt)
                 thrusterl = sliderl.v
             elseif -- Check collision with clock
                 clickclock(x, y, clock) then
-                timer = clock.v * maxtimer
+                timer = clock.v
             end
         end
     elseif gamestate == 2 then
         -- Timer finished
         if countdown <= 0 then
             gamestate = 1
-            clock.v = timer / maxtimer
+            clock.v = timer
             thrustsrcl:stop()
             thrustsrcr:stop()
+            playbutton.sprite = sprites.playbutton
             return
         end
         countdown = countdown - dt
-        clock.v = countdown / maxtimer
+        clock.v = math.floor(100 * countdown) / 100
 
         if player.islanded() then
             return
@@ -116,6 +125,8 @@ function game.update(dt)
         -- Main loop
         player.thrust(thrusterl, thrusterr)
         player.update(dt)
+
+        speed, rotspeed = player.getinfo()
 
         -- Collision
         if player.detectcollision(tiles.data) then
@@ -142,6 +153,7 @@ function game.mousepressed(x, y, button)
             gamestate = 2
             countdown = timer
             player.fly()
+            playbutton.sprite = sprites.playbuttonoff
             if thrusterl > 0 then
                 thrustsrcr:setPitch(thrusterl * 0.8 + 0.2)
                 thrustsrcl:play()
@@ -150,10 +162,6 @@ function game.mousepressed(x, y, button)
                 thrustsrcl:setPitch(thrusterr * 0.8 + 0.2)
                 thrustsrcr:play()
             end
-        end
-
-        if (y < 448) then
-            player.debugposition(x, y)
         end
     end
 end

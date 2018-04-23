@@ -69,7 +69,7 @@ function player.draw()
 end
 
 function player.getinfo()
-    return speed, srot, tx, ty, dead
+    return speed, srot
 end
 
 local debugstring = ""
@@ -140,6 +140,7 @@ function player.land()
     sx = 0
     sy = 0
     rot = 0
+    srot = 0
     py = math.floor((py+16)/32)*32-16
 end
 

@@ -15,10 +15,14 @@ function love.load()
     sprites.hudbg = love.graphics.newImage("sprites/hudbg.png")
     sprites.thrusterbg = love.graphics.newImage("sprites/thrusterbg.png")
     sprites.thrusterslider = love.graphics.newImage("sprites/thrusterslider.png")
+    sprites.thrusterslideroff = love.graphics.newImage("sprites/thrusterslideroff.png")
     sprites.clockbg = love.graphics.newImage("sprites/clockbg.png")
     sprites.playbutton = love.graphics.newImage("sprites/playbutton.png")
+    sprites.playbuttonoff = love.graphics.newImage("sprites/playbuttonoff.png")
     sprites.clockhand = love.graphics.newImage("sprites/clockhand.png")
+    sprites.clockhandoff = love.graphics.newImage("sprites/clockhandoff.png")
     sprites.pinkbutton = love.graphics.newImage("sprites/pinkbutton.png")
+    sprites.infopanel = love.graphics.newImage("sprites/infopanel.png")
 
     -- font from: https://love2d.org/wiki/File:Resource-Imagefont.png
     fonts = {}
@@ -27,13 +31,20 @@ function love.load()
         "font/font.png",
         ' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`\'*#=[]"'
     )
+    fonts.panel = 
+    love.graphics.newImageFont(
+        "font/panelfont.png",
+        '1234567890.s%o '
+    )
 
     musics = {}
     musics.game = love.audio.newSource("music/airshipserenity.mp3", "stream")
     musics.game:setLooping(true)
+    musics.game:setVolume(0.8)
     musics.title = love.audio.newSource("music/mightylikeus.mp3", "stream")
     musics.title:setLooping(true)
     musics.title:play()
+    musics.title:setVolume(0.8)
 
     currentmusic = musics.game
 

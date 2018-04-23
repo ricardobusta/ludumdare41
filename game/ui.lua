@@ -14,18 +14,31 @@ function newslider(x, n)
     slider.n = n
     slider.bg = sprites.thrusterbg
     slider.hand = sprites.thrusterslider
+    slider.handoff = sprites.thrusterslideroff
 
     return slider
 end
 
 function drawslider(slider)
     love.graphics.draw(slider.bg, slider.x, slider.y)
+    
+    local handsprite = nil
+    if gamestate == 1 then
+        handsprite = slider.hand
+    else
+        handsprite = slider.handoff
+    end
+
     local handx = slider.x
+    local ofx = 0
+    local handy = slider.y + (1 - slider.v) * slider.h
     if slider.n == 1 then
         handx = handx - 20
+    else
+        ofx = handsprite:getWidth()
     end
-    local handy = slider.y + (1 - slider.v) * slider.h
-    love.graphics.draw(slider.hand, handx, handy, nil, nil, nil, 0, slider.hand:getHeight() / 2)
+
+    love.graphics.draw(handsprite, handx, handy, nil, slider.n, 1, ofx, handsprite:getHeight() / 2)
 end
 
 function clickslider(x, y, slider)
@@ -66,6 +79,7 @@ function newclock(x, y, r)
     clock.r = r
     clock.bg = sprites.clockbg
     clock.hand = sprites.clockhand
+    clock.handoff = sprites.clockhandoff
     clock.v = 0
     clock.hox = 5
     clock.hoy = 5
@@ -75,21 +89,29 @@ end
 function clickclock(x, y, clock)
     if y <= clock.y and distanceto(x, y, clock.x, clock.y) < clock.r then
         clock.v = (anglebetween(x, y, clock.x, clock.y) / (math.pi))
-        clock.v = math.ceil(clock.v * 100) / 100
+        clock.v = math.ceil(maxtimer * clock.v * 100) / 100
         return true
     elseif y <= clock.y + 5 and y > clock.y then
         if x < clock.x then
             clock.v = 0
         else
-            clock.v = 1
+            clock.v = maxtimer
         end
     end
     return false
 end
 
 function drawclock(clock)
-    love.graphics.draw(clock.bg, clock.x, clock.y, nil, nil, nil, clock.r, clock.r)
-    local rot = clock.v * (math.pi) - math.pi
-    love.graphics.draw(clock.hand, clock.x, clock.y, rot, nil, nil, clock.hox, clock.hoy)
-    love.graphics.print("Time: " .. clock.v, clock.x, clock.y)
+    love.graphics.draw(clock.bg, clock.x, clock.y, nil, nil, nil, clock.r, 122)
+    local rot = (clock.v/maxtimer) * (math.pi) - math.pi
+
+    local clocksprite = nil
+    if gamestate == 1 then
+        clocksprite = clock.hand
+    else
+        clocksprite = clock.handoff
+    end
+    love.graphics.draw(clocksprite, clock.x, clock.y, rot, nil, nil, clock.hox, clock.hoy)
+    love.graphics.setFont(fonts.panel)
+    love.graphics.printf("Time: " .. string.format("%1.2f",clock.v) .. "s", clock.x - clock.r, clock.y - 95, clock.r*2 - 20, "right")
 end
