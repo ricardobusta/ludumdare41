@@ -12,7 +12,7 @@ local minangle = math.pi / 9
 local maxangle = twopi - minangle
 
 -- Player State
-local px, py = 100, 100 -- position x, y
+local px, py = 0, 0 -- position x, y
 local sx, sy = 0, 0 -- speed x, y
 local rot = 0 -- rotation
 local accrot = 0 -- rotation acceleration
@@ -22,6 +22,9 @@ local tx, ty = 0, 0 -- player in tile coordinates
 local speed = 0
 local dead = false
 local landed = false
+
+local diebyspeed = false
+local diebyrotation = false
 
 -- References
 local lg = love.graphics
@@ -33,6 +36,10 @@ function player.init()
     sprite = sprites.player
     sprx = sprite:getWidth() / 2
     spry = sprite:getHeight() / 2
+end
+
+function player.setpos(x, y)
+    px, py = x, y
 end
 
 function player.thrust(l, r)
@@ -62,6 +69,9 @@ function player.update(dt)
     tx = math.floor((px - 16) / 32)
     ty = math.floor((py - 16) / 32)
     speed = math.sqrt(sx ^ 2 + sy ^ 2)
+
+    diebyspeed = speed >= deadlyspeed
+    diebyrotation = (rot <= maxangle and rot >= minangle)
 end
 
 function player.draw()
@@ -85,7 +95,7 @@ function player.detectcollision(tiles)
         collidewithtile(tiles, tx, ty) or collidewithtile(tiles, tx + 1, ty) or collidewithtile(tiles, tx + 1, ty + 1) or
         collidewithtile(tiles, tx, ty + 1)
 
-    debugstring = string.format("%s",collide)
+    debugstring = string.format("%s", collide)
 
     return collide
 end
@@ -96,7 +106,7 @@ function collidewithtile(tiles, x, y)
 
     if tiles[my] and tiles[my][mx] then
         if math.abs(px - cx) <= size or math.abs(py - cy) <= size or distanceto2(cx, cy, px, py) <= tileship2 then
-            if tiles[my][mx].id < 12 or player.dieconditions()  then
+            if tiles[my][mx].id < 12 or player.dieconditions() then
                 dead = true
             end
             return true
@@ -106,7 +116,7 @@ function collidewithtile(tiles, x, y)
 end
 
 function player.dieconditions()
-    return (speed >= deadlyspeed or (rot <= maxangle and rot >= minangle))
+    return diebyrotation or diebyspeed
 end
 
 function player.debugcollision(tiles)
@@ -116,7 +126,7 @@ function player.debugcollision(tiles)
     player.debugcollisiontile(tiles, 1, 1)
 
     lg.circle("line", px, py, 16)
-    lg.print(debugstring .. string.format("%s",player.dieconditions()), 0, 60)
+    lg.print(debugstring .. string.format("%s", player.dieconditions()), 0, 60)
 end
 
 function player.debugcollisiontile(tiles, ox, oy)
@@ -137,11 +147,15 @@ end
 
 function player.land()
     landed = true
+    player.reset()
+    py = math.floor((py + 16) / 32) * 32 - 16
+end
+
+function player.reset()
     sx = 0
     sy = 0
     rot = 0
     srot = 0
-    py = math.floor((py+16)/32)*32-16
 end
 
 function player.fly()

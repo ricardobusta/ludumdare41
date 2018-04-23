@@ -23,7 +23,10 @@ function love.load()
     sprites.clockhandoff = love.graphics.newImage("sprites/clockhandoff.png")
     sprites.pinkbutton = love.graphics.newImage("sprites/pinkbutton.png")
     sprites.infopanel = love.graphics.newImage("sprites/infopanel.png")
+    sprites.lightred = love.graphics.newImage("sprites/lightred.png")
+    sprites.lightgreen = love.graphics.newImage("sprites/lightgreen.png")
     sprites.rotate = love.graphics.newImage("sprites/rotateccw.png")
+    sprites.popup = love.graphics.newImage("sprites/popupbg.png")
 
     -- font from: https://love2d.org/wiki/File:Resource-Imagefont.png
     fonts = {}
@@ -32,11 +35,7 @@ function love.load()
         "font/font.png",
         ' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`\'*#=[]"'
     )
-    fonts.panel = 
-    love.graphics.newImageFont(
-        "font/panelfont.png",
-        '1234567890.s%o '
-    )
+    fonts.panel = love.graphics.newImageFont("font/panelfont.png", "1234567890.s%o ")
 
     musics = {}
     musics.game = love.audio.newSource("music/airshipserenity.mp3", "stream")

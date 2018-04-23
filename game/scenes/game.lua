@@ -5,6 +5,7 @@ local radtodeg = 180 / math.pi
 
 -- Game Objects
 local player = require("player")
+local tiled = require("tiled/sti")
 local map = nil
 local tiles = nil
 local clock = nil
@@ -53,15 +54,19 @@ function game.init()
 
     explosion:setVolume(0.8)
 
-    local tiled = require("tiled/sti")
-    map = tiled("maps/map.lua")
-    tiles = map.layers["Tiles1"]
+    game.playagain()
 
     clock = newclock(540, 575, 65)
 
     playbutton = newbutton(635, 512, sprites.playbutton)
 
-    local x = 320
+    resetbutton = newbutton(730, 480, sprites.lightred, "Reset", 5)
+    quitbutton = newbutton(730, 550, sprites.lightred, "Quit", 5)
+
+    resetbutton2 = newbutton(400, 300, sprites.pinkbutton, "Reset", 7)
+    quitbutton2 = newbutton(400, 350, sprites.pinkbutton, "Quit", 7)
+
+    local x = 310
     sliderl = newslider(x, -1)
     sliderboth = newslider(x + 40, 0)
     sliderr = newslider(x + 80, 1)
@@ -77,6 +82,16 @@ function game.draw()
     drawclock(clock)
     drawbutton(playbutton)
 
+    -- Draw light
+    local light = nil
+    if player.dieconditions() then
+        light = sprites.lightred
+    else
+        light = sprites.lightgreen
+    end
+    lg.draw(light, 650, 463)
+
+    -- Draw info panel
     local panx = 35
     local pany = 463
     lg.setFont(fonts.panel)
@@ -89,10 +104,41 @@ function game.draw()
     lg.printf(turns, panx, pany + 92, 80, "right")
     if rotspeed > 0.01 or rotspeed < -0.01 then
         local s = 1
-        if rotspeed>0 then
+        if rotspeed > 0 then
             s = -1
         end
-        lg.draw(sprites.rotate, panx + 197, pany + 37, nil, s, 1, sprites.rotate:getWidth()/2, sprites.rotate:getHeight()/2)
+        lg.draw(
+            sprites.rotate,
+            panx + 197,
+            pany + 37,
+            nil,
+            s,
+            1,
+            sprites.rotate:getWidth() / 2,
+            sprites.rotate:getHeight() / 2
+        )
+    end
+
+    drawbutton(resetbutton)
+    drawbutton(quitbutton)
+
+    -- Draw info popup
+    if gamestate >= 3 then
+        lg.setColor(0, 0, 0, 0.7)
+        lg.rectangle("fill", 0, 0, 800, 600)
+        lg.setColor(1, 1, 1, 1)
+        lg.setFont(fonts.small)
+        local msg = ""
+        if gamestate == 3 then
+            msg = "Game Over!"
+        else
+            msg = "You Win!"
+        end
+        lg.printf(msg, 0, 200, 800, "center")
+        lg.printf("Number of turns: " .. turns, 0, 250, 800, "center")
+
+        drawbutton(resetbutton2)
+        drawbutton(quitbutton2)
     end
 end
 
@@ -156,24 +202,59 @@ function game.update(dt)
 end
 
 function game.mousepressed(x, y, button)
-    if gamestate == 1 and button == 1 then
-        -- Check collision with play button
-        if checkinside(x, y, playbutton) then
-            gamestate = 2
-            countdown = timer
-            player.fly()
-            turns = turns + 1
-            playbutton.sprite = sprites.playbuttonoff
-            if thrusterl > 0 then
-                thrustsrcr:setPitch(thrusterl * 0.8 + 0.2)
-                thrustsrcl:play()
+    if button == 1 then
+        if gamestate == 1 then
+            -- Check collision with play button
+            if checkinside(x, y, playbutton) then
+                gamestate = 2
+                countdown = timer
+                player.fly()
+                turns = turns + 1
+                playbutton.sprite = sprites.playbuttonoff
+                if thrusterl > 0 then
+                    thrustsrcr:setPitch(thrusterl * 0.8 + 0.2)
+                    thrustsrcl:play()
+                end
+                if thrusterr > 0 then
+                    thrustsrcl:setPitch(thrusterr * 0.8 + 0.2)
+                    thrustsrcr:play()
+                end
             end
-            if thrusterr > 0 then
-                thrustsrcl:setPitch(thrusterr * 0.8 + 0.2)
-                thrustsrcr:play()
+        end
+
+        if gamestate <= 2 then
+            if checkinside(x, y, resetbutton) then
+                game.playagain()
+            end
+
+            if checkinside(x, y, quitbutton) then
+                game.quit()
+            end
+        elseif gamestate >= 3 then
+            if checkinside(x, y, resetbutton2) then
+                game.playagain()
+            end
+
+            if checkinside(x, y, quitbutton2) then
+                game.quit()
             end
         end
     end
+end
+
+function game.playagain()
+    map = tiled("maps/map.lua")
+    tiles = map.layers["Tiles1"]
+    player.setpos(100, 100)
+    player.reset()
+    gamestate = 1
+    player.fly()
+end
+
+function game.quit()
+    musics.title:play()
+    musics.game:stop()
+    currentscene = 1
 end
 
 return game

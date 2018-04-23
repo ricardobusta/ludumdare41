@@ -13,7 +13,7 @@ function titlescreen.draw()
     love.graphics.setFont(fonts.small)
     love.graphics.print("title screen")
     love.graphics.print("game by Ricardo Bustamante and Vanessa Karla", 0, 20)
-    love.graphics.print("\"Mighty Like Us\", \"Airship Serenity\" Kevin MacLeod (incompetech.com)", 0, 40)
+    love.graphics.print('"Mighty Like Us", "Airship Serenity" Kevin MacLeod (incompetech.com)', 0, 40)
 
     drawbutton(startbutton)
 end

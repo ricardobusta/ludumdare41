@@ -21,7 +21,7 @@ end
 
 function drawslider(slider)
     love.graphics.draw(slider.bg, slider.x, slider.y)
-    
+
     local handsprite = nil
     if gamestate == 1 then
         handsprite = slider.hand
@@ -68,6 +68,7 @@ end
 
 function drawbutton(button)
     love.graphics.draw(button.sprite, button.x, button.y)
+    love.graphics.setFont(fonts.small)
     love.graphics.printf(button.text, button.x, button.y + button.h / 2 - button.toff, button.w, "center")
 end
 
@@ -103,7 +104,7 @@ end
 
 function drawclock(clock)
     love.graphics.draw(clock.bg, clock.x, clock.y, nil, nil, nil, clock.r, 122)
-    local rot = (clock.v/maxtimer) * (math.pi) - math.pi
+    local rot = (clock.v / maxtimer) * (math.pi) - math.pi
 
     local clocksprite = nil
     if gamestate == 1 then
@@ -113,5 +114,11 @@ function drawclock(clock)
     end
     love.graphics.draw(clocksprite, clock.x, clock.y, rot, nil, nil, clock.hox, clock.hoy)
     love.graphics.setFont(fonts.panel)
-    love.graphics.printf("Time: " .. string.format("%1.2f",clock.v) .. "s", clock.x - clock.r, clock.y - 95, clock.r*2 - 20, "right")
+    love.graphics.printf(
+        "Time: " .. string.format("%1.2f", clock.v) .. "s",
+        clock.x - clock.r,
+        clock.y - 95,
+        clock.r * 2 - 20,
+        "right"
+    )
 end
