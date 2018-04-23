@@ -27,6 +27,7 @@ function love.load()
     sprites.lightgreen = love.graphics.newImage("sprites/lightgreen.png")
     sprites.rotate = love.graphics.newImage("sprites/rotateccw.png")
     sprites.rocat = love.graphics.newImage("sprites/rocat.png")
+    sprites.fire = love.graphics.newImage("sprites/fire.png")
 
     -- font from: https://love2d.org/wiki/File:Resource-Imagefont.png
     fonts = {}

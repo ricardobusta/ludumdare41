@@ -41,10 +41,6 @@ function player.init()
     spry = sprite:getHeight() / 2
 end
 
-function player.setpos(x, y)
-    px, py = x, y
-end
-
 function player.thrust(l, r)
     sl = l
     sr = r
@@ -79,6 +75,13 @@ end
 
 function player.draw()
     lg.draw(sprite, px, py, rot, nil, nil, sprx, spry)
+
+    lg.push()
+    love.graphics.translate(px,py)
+    love.graphics.rotate(rot)
+    lg.draw(sprites.fire, -17, 17, 0, 1,sl)
+    lg.draw(sprites.fire, 7, 17, 0, 1,sr)
+    lg.pop()
 end
 
 function player.getinfo()
@@ -141,15 +144,10 @@ function player.debugcollisiontile(tiles, ox, oy)
     lg.rectangle("line", x * 32, y * 32, 32, 32)
 end
 
-function player.debugposition()
-    local x, y = lovesize.pos(love.mouse.getX(), love.mouse.getY())
-    px, py = x, y
-end
-
 function player.land()
     landed = true
     player.reset()
-    py = math.floor((py + 16) / 32) * 32 - 16
+    py = math.floor((py + 16) / 32) * 32 + 16
 end
 
 function player.reset()
