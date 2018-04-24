@@ -3,11 +3,9 @@ local titlescreen = {}
 local startbutton = nil
 local quitbutton = nil
 
-local player = require("player")
-
 function titlescreen.init()
-    startbutton = newbutton(500, 250, sprites.pinkbutton, "start game", 8)
-    quitbutton = newbutton(500, 350, sprites.pinkbutton, "quit game", 8)
+    startbutton = newbutton(500, 250, sprites.pinkbutton, "Start", 8)
+    quitbutton = newbutton(500, 350, sprites.pinkbutton, "Quit", 8)
 end
 
 function titlescreen.update(dt)

@@ -60,8 +60,8 @@ function game.init()
 
     playbutton = newbutton(635, 512, sprites.playbuttonoff)
 
-    resetbutton = newbutton(730, 480, sprites.lightred, "Reset", 5)
-    quitbutton = newbutton(730, 550, sprites.lightred, "Quit", 5)
+    resetbutton = newbutton(720, 480, sprites.smallbutton, "Reset", 7)
+    quitbutton = newbutton(720, 530, sprites.smallbutton, "Quit", 7)
 
     resetbutton2 = newbutton(300, 300, sprites.pinkbutton, "Reset", 7)
     quitbutton2 = newbutton(300, 400, sprites.pinkbutton, "Quit", 7)
