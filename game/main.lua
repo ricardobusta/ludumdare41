@@ -1,3 +1,6 @@
+local lg = love.graphics
+local la = love.audio
+
 function love.load()
     --[[
         Scenes:
@@ -8,42 +11,46 @@ function love.load()
     currentscene = 1
 
     -- Assets
-    love.graphics.setDefaultFilter("nearest", "nearest", 1)
-    sprites = {}
-    sprites.bg = love.graphics.newImage("sprites/bg.png")
-    sprites.player = love.graphics.newImage("sprites/ship.png")
-    sprites.hudbg = love.graphics.newImage("sprites/hudbg.png")
-    sprites.thrusterbg = love.graphics.newImage("sprites/thrusterbg.png")
-    sprites.thrusterslider = love.graphics.newImage("sprites/thrusterslider.png")
-    sprites.thrusterslideroff = love.graphics.newImage("sprites/thrusterslideroff.png")
-    sprites.clockbg = love.graphics.newImage("sprites/clockbg.png")
-    sprites.playbutton = love.graphics.newImage("sprites/playbutton.png")
-    sprites.playbuttonoff = love.graphics.newImage("sprites/playbuttonoff.png")
-    sprites.clockhand = love.graphics.newImage("sprites/clockhand.png")
-    sprites.clockhandoff = love.graphics.newImage("sprites/clockhandoff.png")
-    sprites.pinkbutton = love.graphics.newImage("sprites/pinkbutton.png")
-    sprites.infopanel = love.graphics.newImage("sprites/infopanel.png")
-    sprites.lightred = love.graphics.newImage("sprites/lightred.png")
-    sprites.lightgreen = love.graphics.newImage("sprites/lightgreen.png")
-    sprites.rotate = love.graphics.newImage("sprites/rotateccw.png")
-    sprites.rocat = love.graphics.newImage("sprites/rocat.png")
-    sprites.fire = love.graphics.newImage("sprites/fire.png")
-    sprites.smallbutton = love.graphics.newImage("sprites/smallbutton.png")
+    lg.setDefaultFilter("nearest", "nearest", 1)
+    sprites = {
+        bg = lg.newImage("sprites/bg.png"),
+        player = lg.newImage("sprites/ship.png"),
+        hudbg = lg.newImage("sprites/hudbg.png"),
+        thrusterbg = lg.newImage("sprites/thrusterbg.png"),
+        thrusterslider = lg.newImage("sprites/thrusterslider.png"),
+        thrusterslideroff = lg.newImage("sprites/thrusterslideroff.png"),
+        clockbg = lg.newImage("sprites/clockbg.png"),
+        playbutton = lg.newImage("sprites/playbutton.png"),
+        playbuttonoff = lg.newImage("sprites/playbuttonoff.png"),
+        clockhand = lg.newImage("sprites/clockhand.png"),
+        clockhandoff = lg.newImage("sprites/clockhandoff.png"),
+        pinkbutton = lg.newImage("sprites/pinkbutton.png"),
+        infopanel = lg.newImage("sprites/infopanel.png"),
+        lightred = lg.newImage("sprites/lightred.png"),
+        lightgreen = lg.newImage("sprites/lightgreen.png"),
+        rotate = lg.newImage("sprites/rotateccw.png"),
+        rocat = lg.newImage("sprites/rocat.png"),
+        fire = lg.newImage("sprites/fire.png"),
+        smallbutton = lg.newImage("sprites/smallbutton.png")
+    }
 
     -- font from: https://love2d.org/wiki/File:Resource-Imagefont.png
-    fonts = {}
-    fonts.small =
-        love.graphics.newImageFont(
-        "font/font.png",
-        ' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`\'*#=[]"'
-    )
-    fonts.panel = love.graphics.newImageFont("font/panelfont.png", "1234567890.s%o ")
+    fonts = {
+        small = lg.newImageFont(
+            "font/font.png",
+            ' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!?-+/():;%&`\'*#=[]"'
+        ),
+        panel = lg.newImageFont("font/panelfont.png", "1234567890.s%o ")
+    }
 
-    musics = {}
-    musics.game = love.audio.newSource("music/airshipserenity.mp3", "stream")
+    musics = {
+        game = la.newSource("music/airshipserenity.mp3", "stream"),
+        title = la.newSource("music/mightylikeus.mp3", "stream")
+    }
+
     musics.game:setLooping(true)
     musics.game:setVolume(0.8)
-    musics.title = love.audio.newSource("music/mightylikeus.mp3", "stream")
+
     musics.title:setLooping(true)
     musics.title:play()
     musics.title:setVolume(0.8)
@@ -65,10 +72,11 @@ function love.load()
     titlescreen.init()
     stageselect.init()
 
-    local flags = {}
-    flags.resizable = true
-    love.window.setMode(lovesize.getWidth(), lovesize.getHeight(), flags)
+    local flags = {
+        resizable = true
+    }
 
+    love.window.setMode(lovesize.getWidth(), lovesize.getHeight(), flags)
     love.window.setTitle("Ro'Cat Science! - Ludum Dare 41")
 end
 
@@ -83,7 +91,7 @@ function love.update(dt)
 end
 
 function love.draw()
-    love.graphics.clear(0.91, 0.78, 0.46)
+    lg.clear(0.91, 0.78, 0.46)
     lovesize.begin()
     if currentscene == 1 then
         titlescreen.draw()
